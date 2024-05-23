@@ -4,6 +4,7 @@ import os
 
 
 from Client.client_keyboard.client_kb import client_kb
+from VPG_Handler.VPGHandler import VPGHandler
 
 
 PATH_WORKSPACE = 'Workspace'
@@ -23,7 +24,7 @@ async def save_photo(message: Message):
             await message.video.download(name)
 
         elif message.content_type == 'document':
-            if not (message.document.file_name.split('.') in extensions):
+            if not (message.document.file_name.split('.')[-1] in extensions):
                 return
             name = os.path.join(PATH_WORKSPACE, f'{message.document.file_unique_id}.mp4')
             await message.document.download(name)
@@ -33,11 +34,15 @@ async def save_photo(message: Message):
     await message.answer_chat_action("typing")
 
     # TODO: Обработка видео
+    vpg_handler = VPGHandler(name)
+    await vpg_handler.start()
+    hr = await vpg_handler.join()
 
     # TODO: Отправка результата
-    await message.answer(f'ЧСС: {77}', reply_markup=client_kb)
+    await message.answer(f'ЧСС: {hr}', reply_markup=client_kb)
 
     # TODO: удаление временных файлов
+    os.remove(name)
 
 
 async def delete_message(message: Message):

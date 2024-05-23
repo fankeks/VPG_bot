@@ -1,1 +1,6 @@
 aiogram==2.25
+numpy
+matplotlib
+opencv-python
+scipy==1.12.0
+dlib==19.24.2
